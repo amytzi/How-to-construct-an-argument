@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Argument Paragraph Builder</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card: #ffffff;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --accent: #4f46e5;
+    --accent-soft: #eef2ff;
+    --border: #e5e7eb;
+    --good: #059669;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 1.7rem; margin: 0 0 6px; }
+  .sub { color: var(--muted); margin: 0 0 28px; font-size: .95rem; }
+  h2 { font-size: 1.2rem; margin: 36px 0 12px; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  }
+  .example p { margin: 0 0 12px; }
+  .example p:last-child { margin-bottom: 0; }
+  .tag {
+    display: inline-block;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 999px;
+    padding: 2px 10px;
+    margin-bottom: 8px;
+  }
+  .annotated b { color: var(--accent); }
+  .legend { font-size: .82rem; color: var(--muted); margin-top: 14px; }
+
+  /* Generator */
+  .slot { margin-bottom: 22px; }
+  .slot-head {
+    display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px;
+  }
+  .slot-num {
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: .82rem;
+    font-weight: 700;
+    display: grid; place-items: center;
+    transform: translateY(2px);
+  }
+  .slot-title { font-weight: 700; font-size: 1rem; }
+  .slot-desc { color: var(--muted); font-size: .85rem; }
+  .draw-row { display: flex; gap: 10px; align-items: stretch; }
+  .result {
+    flex: 1;
+    min-height: 48px;
+    border: 1px dashed #c7d2fe;
+    background: #fbfcff;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: .95rem;
+    display: flex; align-items: center;
+  }
+  .result.filled {
+    border-style: solid;
+    border-color: #a5b4fc;
+    background: var(--accent-soft);
+    font-weight: 600;
+    color: #312e81;
+  }
+  .result .placeholder { color: #9ca3af; font-style: italic; font-weight: 400; }
+  button {
+    font-family: inherit;
+    font-size: .88rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    padding: 0 18px;
+    cursor: pointer;
+    transition: transform .06s ease, background .15s ease;
+  }
+  button:active { transform: scale(.97); }
+  .draw-btn { background: var(--accent); color: #fff; }
+  .draw-btn:hover { background: #4338ca; }
+  .reset-btn {
+    background: #fff; color: var(--muted);
+    border: 1px solid var(--border);
+    padding: 9px 18px;
+  }
+  .reset-btn:hover { color: var(--ink); }
+  .controls { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  .preview {
+    margin-top: 30px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 14px;
+    padding: 22px 24px;
+  }
+  .preview h3 { margin: 0 0 12px; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: #94a3b8; }
+  .preview p { margin: 0; font-size: 1rem; line-height: 1.75; }
+  .preview .empty { color: #64748b; font-style: italic; }
+  .preview mark { background: rgba(99,102,241,.35); color: #fff; border-radius: 4px; padding: 0 3px; }
+
+  @media (max-width: 560px) {
+    .draw-row { flex-direction: column; }
+    .draw-btn { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Argument Paragraph Builder</h1>
+  <p class="sub">Model paragraph + interactive phrase draw. Each slot is a stage of a well-structured argument paragraph.</p>
+
+  <!-- ============ MODEL PARAGRAPH ============ -->
+  <h2>Model paragraph: “Social media is harmful to teenagers”</h2>
+  <div class="card example">
+    <span class="tag">Against the use of social media by teenagers</span>
+    <p class="annotated">
+      <b>First of all, it is widely believed that</b> social media has a damaging effect on teenagers’ mental health.
+      <b>By this I mean that</b> constant exposure to carefully curated images encourages young people to compare themselves unfavourably with others.
+      <b>To illustrate this point,</b> a recent study found that teenagers who spend more than three hours a day on social platforms report significantly higher levels of anxiety and low self-esteem.
+      <b>This clearly demonstrates that</b> the more time adolescents spend online, the greater the risk to their emotional wellbeing.
+      <b>Therefore,</b> it is reasonable to conclude that unrestricted social media use is a serious threat to the mental health of young people.
+    </p>
+    <p class="legend">
+      Colour-coded stages: <b>argument opener</b> → <b>explanation</b> → <b>example</b> → <b>link to main point</b> → <b>conclusion</b>.
+    </p>
+  </div>
+
+  <!-- ============ GENERATOR ============ -->
+  <h2>Draw your own phrases</h2>
+  <div class="card">
+
+    <div class="slot" data-slot="0">
+      <div class="slot-head">
+        <div class="slot-num">1</div>
+        <div>
+          <div class="slot-title">Introduce the argument</div>
+          <div class="slot-desc">Open with your claim / topic sentence</div>
+        </div>
+      </div>
+      <div class="draw-row">
+        <div class="result"><span class="placeholder">Click “Draw” to get a phrase…</span></div>
+        <button class="draw-btn" onclick="draw(0)">Draw</button>
+      </div>
+    </div>
+
+    <div class="slot" data-slot="1">
+      <div class="slot-head">
+        <div class="slot-num">2</div>
+        <div>
+          <div class="slot-title">Explain in more detail</div>
+          <div class="slot-desc">Clarify what you mean by the claim</div>
+        </div>
+      </div>
+      <div class="draw-row">
+        <div class="result"><span class="placeholder">Click “Draw” to get a phrase…</span></div>
+        <button class="draw-btn" onclick="draw(1)">Draw</button>
+      </div>
+    </div>
+
+    <div class="slot" data-slot="2">
+      <div class="slot-head">
+        <div class="slot-num">3</div>
+        <div>
+          <div class="slot-title">Introduce an example</div>
+          <div class="slot-desc">Bring in evidence or an illustration</div>
+        </div>
+      </div>
+      <div class="draw-row">
+        <div class="result"><span class="placeholder">Click “Draw” to get a phrase…</span></div>
+        <button class="draw-btn" onclick="draw(2)">Draw</button>
+      </div>
+    </div>
+
+    <div class="slot" data-slot="3">
+      <div class="slot-head">
+        <div class="slot-num">4</div>
+        <div>
+          <div class="slot-title">Link the example to the main point</div>
+          <div class="slot-desc">Show what the example proves</div>
+        </div>
+      </div>
+      <div class="draw-row">
+        <div class="result"><span class="placeholder">Click “Draw” to get a phrase…</span></div>
+        <button class="draw-btn" onclick="draw(3)">Draw</button>
+      </div>
+    </div>
+
+    <div class="slot" data-slot="4">
+      <div class="slot-head">
+        <div class="slot-num">5</div>
+        <div>
+          <div class="slot-title">Conclude the argument</div>
+          <div class="slot-desc">Wrap up and restate the position</div>
+        </div>
+      </div>
+      <div class="draw-row">
+        <div class="result"><span class="placeholder">Click “Draw” to get a phrase…</span></div>
+        <button class="draw-btn" onclick="draw(4)">Draw</button>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="reset-btn" onclick="resetAll()">Reset all</button>
+    </div>
+  </div>
+
+  <!-- ============ PREVIEW ============ -->
+  <div class="preview">
+    <h3>Your paragraph skeleton</h3>
+    <p id="preview"><span class="empty">Draw phrases above to build your paragraph skeleton…</span></p>
+  </div>
+
+</div>
+
+<script>
+  const PHRASES = {
+    0: [ // Introduce the argument
+      "First of all, it is widely believed that",
+      "To begin with, it is generally accepted that",
+      "First and foremost, it is commonly thought that",
+      "In the first place, it is often said that",
+      "At the outset, it is widely acknowledged that",
+      "To start with, it is generally agreed that",
+      "First of all, it is a common belief that",
+      "Initially, it is widely recognized that",
+      "Above all, it is widely believed that",
+      "Most importantly, it is generally accepted that"
+    ],
+    1: [ // Explain in more detail
+      "By this I mean that",
+      "What I mean by this is that",
+      "In other words,",
+      "To put it another way,",
+      "That is to say,",
+      "To clarify,",
+      "More precisely,",
+      "To explain further,",
+      "To elaborate,",
+      "To be more specific,",
+      "This is because",
+      "The reason for this is that"
+    ],
+    2: [ // Introduce an example
+      "For example,",
+      "For instance,",
+      "To illustrate this point,",
+      "To illustrate the above,",
+      "A good example of this is",
+      "A case in point is",
+      "A striking example of this is",
+      "A clear example of this is",
+      "A prime example of this is",
+      "To give an example,",
+      "As an illustration,",
+      "This can be seen in"
+    ],
+    3: [ // Link example to main point
+      "This shows that",
+      "This demonstrates that",
+      "This clearly demonstrates that",
+      "This proves that",
+      "This confirms that",
+      "This supports the view that",
+      "This is evidence that",
+      "This goes to show that",
+      "This clearly illustrates that",
+      "What this tells us is that",
+      "This reflects a wider trend in which",
+      "This reinforces the idea that",
+      "This brings us back to the point that"
+    ],
+    4: [ // Conclude the argument
+      "Therefore,",
+      "As a result,",
+      "Consequently,",
+      "It follows that",
+      "From this, we can conclude that",
+      "This leads us to conclude that",
+      "In conclusion, it is commonly thought that",
+      "To sum up, it is widely acknowledged that",
+      "Ultimately, it is often argued that",
+      "For this reason,",
+      "Accordingly,",
+      "In short, this shows that"
+    ]
+  };
+
+  const picks = { 0: null, 1: null, 2: null, 3: null, 4: null };
+
+  // Draw a random phrase for a slot (avoids repeating the current one)
+  function draw(index) {
+    const list = PHRASES[index];
+    let choice;
+    do {
+      choice = list[Math.floor(Math.random() * list.length)];
+    } while (list.length > 1 && choice === picks[index]);
+    picks[index] = choice;
+    renderSlot(index);
+    renderPreview();
+  }
+
+  function renderSlot(index) {
+    const slot = document.querySelector(`.slot[data-slot="${index}"]`);
+    const result = slot.querySelector(".result");
+    if (picks[index]) {
+      result.classList.add("filled");
+      result.textContent = picks[index];
+    } else {
+      result.classList.remove("filled");
+      result.innerHTML = '<span class="placeholder">Click “Draw” to get a phrase…</span>';
+    }
+  }
+
+  function renderPreview() {
+    const p = document.getElementById("preview");
+    const anyPicked = Object.values(picks).some(v => v !== null);
+    if (!anyPicked) {
+      p.innerHTML = '<span class="empty">Draw phrases above to build your paragraph skeleton…</span>';
+      return;
+    }
+    const labels = [
+      "… [your claim].",
+      "… [your explanation].",
+      "… [your evidence / example].",
+      "… [what it proves].",
+      "… [your conclusion]."
+    ];
+    let html = "";
+    for (let i = 0; i < 5; i++) {
+      if (picks[i]) {
+        html += `<mark>${escapeHtml(picks[i])}</mark> ${labels[i]}<br>`;
+      }
+    }
+    p.innerHTML = html;
+  }
+
+  function resetAll() {
+    for (let i = 0; i < 5; i++) {
+      picks[i] = null;
+      renderSlot(i);
+    }
+    renderPreview();
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+</script>
+</body>
+</html>
